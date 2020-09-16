@@ -10,8 +10,8 @@ using Repository.Context;
 namespace Repository.Migrations
 {
     [DbContext(typeof(AT_APIContext))]
-    [Migration("20200916003848_CreateInitialTable")]
-    partial class CreateInitialTable
+    [Migration("20200916005200_CreateDataBase")]
+    partial class CreateDataBase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
