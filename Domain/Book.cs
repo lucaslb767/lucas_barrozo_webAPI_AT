@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Domain
 {
@@ -10,6 +11,8 @@ namespace Domain
         public String Name { get; set; }
         public String ISBN { get; set; }
         public String Ano { get; set; }
+
+        [JsonIgnore]
         public virtual Author Author { get; set; }
     }
 }
