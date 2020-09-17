@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Domain;
 using Repository.Context;
+using System.Security.Cryptography.X509Certificates;
 
 namespace AT_API.Controllers
 {
@@ -48,12 +49,18 @@ namespace AT_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBook(int id, Book book)
         {
+            book.Id = id;
             if (id != book.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(book).State = EntityState.Modified;
+            var bookMod = _context.Books.Find(id);
+            bookMod.Name = book.Name;
+            bookMod.ISBN = book.ISBN;
+            bookMod.Ano = book.Ano;
+
+            _context.Books.Update(bookMod);
 
             try
             {
@@ -78,8 +85,10 @@ namespace AT_API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Book>> PostBook(Book book)
+        public async Task<ActionResult<Book>> PostBook(BookResponse bookResponse)
         {
+            bookResponse.Author = await _context.Authors.FirstOrDefaultAsync(d => d.Id == bookResponse.Author.Id);
+            Book book = new Book { Name = bookResponse.Name, ISBN = bookResponse.ISBN, Ano = bookResponse.ISBN, Author = bookResponse.Author };
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
 

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain;
 using Repository.Context;
 using System.Security.Cryptography.X509Certificates;
+using System.Linq.Expressions;
 
 namespace AT_API.Controllers
 {
@@ -54,7 +55,12 @@ namespace AT_API.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(author).State = EntityState.Modified;
+            var authorMod = _context.Authors.Find(id);
+            authorMod.Name = author.Name;
+            authorMod.Email = author.Email;
+            authorMod.DataDeAniversario = author.DataDeAniversario;
+
+            _context.Authors.Update(authorMod);
 
             try
             {
@@ -96,16 +102,23 @@ namespace AT_API.Controllers
             {
                 return NotFound();
             }
-
-            foreach(var item in author.Books)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                _context.Books.Remove(item);
+                try
+                {
+                    foreach (var item in author.Books)
+                    {
+                        _context.Books.Remove(item);
+                    }
+                    _context.Authors.Remove(author);
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                } catch
+                {
+                    transaction.Rollback();
+                }
             }
-
-            _context.Authors.Remove(author);
-            await _context.SaveChangesAsync();
-
-            return author;
+            return NoContent();
         }
 
         private bool AuthorExists(int id)
