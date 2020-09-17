@@ -19,8 +19,6 @@ namespace Repository.Mapping
             builder.Property(x => x.ISBN).IsRequired();
             builder.Property(x => x.Ano).IsRequired();
 
-
-
             builder.HasOne<Author>(x => x.Author);
         }
     }

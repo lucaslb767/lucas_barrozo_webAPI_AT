@@ -20,7 +20,6 @@ namespace Repository.Mapping
             builder.Property(x => x.Email).IsRequired().HasMaxLength(200);
             builder.Property(x => x.DataDeAniversario).IsRequired();
 
-            builder.HasMany<Book>(x => x.Books).WithOne(x => x.Author);
         }
     }
 }
