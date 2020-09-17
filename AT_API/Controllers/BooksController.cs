@@ -88,7 +88,7 @@ namespace AT_API.Controllers
         public async Task<ActionResult<Book>> PostBook(BookResponse bookResponse)
         {
             bookResponse.Author = await _context.Authors.FirstOrDefaultAsync(d => d.Id == bookResponse.Author.Id);
-            Book book = new Book { Name = bookResponse.Name, ISBN = bookResponse.ISBN, Ano = bookResponse.ISBN, Author = bookResponse.Author };
+            Book book = new Book { Name = bookResponse.Name, ISBN = bookResponse.ISBN, Ano = bookResponse.Ano, Author = bookResponse.Author };
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
 

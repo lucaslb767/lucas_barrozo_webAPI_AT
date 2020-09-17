@@ -57,7 +57,7 @@ namespace MVC.Controllers
         {
             var client = new RestClient();
             var request = new RestRequest("https://localhost:5001/api/authors/" + id, DataFormat.Json);
-            var response = client.Get<Author>(request);
+            var response = client.Get<AuthorResponse>(request);
 
             return View(response.Data);
         }
