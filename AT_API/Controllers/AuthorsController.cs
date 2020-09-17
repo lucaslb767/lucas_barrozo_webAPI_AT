@@ -12,13 +12,13 @@ using System.Linq.Expressions;
 
 namespace AT_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/authors")]
     [ApiController]
-    public class AuthorController : ControllerBase
+    public class AuthorsController : ControllerBase
     {
         private readonly AT_APIContext _context;
 
-        public AuthorController(AT_APIContext context)
+        public AuthorsController(AT_APIContext context)
         {
             _context = context;
         }

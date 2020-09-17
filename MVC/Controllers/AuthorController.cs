@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RestSharp;
 
 namespace MVC.Controllers
 {
@@ -12,13 +14,19 @@ namespace MVC.Controllers
         // GET: AuthorController
         public ActionResult Index()
         {
-            return View();
+            var client = new RestClient();
+            var request = new RestRequest("https://localhost:5001/api/authors", DataFormat.Json);
+            var response = client.Get<List<Author>>(request);
+            return View(response.Data);
         }
 
         // GET: AuthorController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var client = new RestClient();
+            var request = new RestRequest("https://localhost:5001/api/authors/" + id, DataFormat.Json);
+            var response = client.Get<Author>(request);
+            return View(response.Data);
         }
 
         // GET: AuthorController/Create
@@ -30,32 +38,44 @@ namespace MVC.Controllers
         // POST: AuthorController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Author author)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                var client = new RestClient();
+
+                var request = new RestRequest("https://localhost:5001/api/authors", DataFormat.Json);
+                request.AddJsonBody(author);
+                var response = client.Post<Author>(request);
+                return Redirect("/author/index");
             }
-            catch
-            {
-                return View();
-            }
+            return BadRequest();
         }
 
         // GET: AuthorController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var client = new RestClient();
+            var request = new RestRequest("https://localhost:5001/api/authors/" + id, DataFormat.Json);
+            var response = client.Get<Author>(request);
+
+            return View(response.Data);
         }
 
         // POST: AuthorController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Author author)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var client = new RestClient();
+                var request = new RestRequest("https://localhost:5001/api/authors/" + id, DataFormat.Json);
+                request.AddJsonBody(author);
+                var response = client.Put<Author>(request);
+
+                return Redirect("/author/index");
+
             }
             catch
             {
@@ -66,17 +86,26 @@ namespace MVC.Controllers
         // GET: AuthorController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var client = new RestClient();
+            var request = new RestRequest("https://localhost:5001/api/authors/" + id, DataFormat.Json);
+            var response = client.Get<Author>(request);
+
+            return View(response.Data);
         }
 
         // POST: AuthorController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Author author)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var client = new RestClient();
+
+                var request = new RestRequest("https://localhost:5001/api/authors/" + id, DataFormat.Json);
+                var response = client.Delete<Author>(request);
+
+                return Redirect("/author");
             }
             catch
             {
